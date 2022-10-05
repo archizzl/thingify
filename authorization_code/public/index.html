@@ -4,8 +4,16 @@
     <title>Example of the Authorization Code flow with Spotify</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style type="text/css">
+    .container {
+      height: 100vh;
+      width: 100vw;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
       #login, #loggedin {
-        display: none;
+        color: red;
       }
       .text-overflow {
         overflow: hidden;
@@ -13,13 +21,26 @@
         white-space: nowrap;
         width: 500px;
       }
+
+      #pfp {
+        width: 400px;
+        transition: 2s;
+      }
+      #pfpbg {
+        transition: 2s;
+      }
+      #obtain-new-token {
+        display: none;
+      }
     </style>
   </head>
 
   <body>
+
+
     <div class="container">
       <div id="login">
-        <h1>This is an example of the Authorization Code flow</h1>
+        <h1>yoooooooooooooo</h1>
         <a href="/login" class="btn btn-primary">Log in with Spotify</a>
       </div>
       <div id="loggedin">
@@ -32,11 +53,13 @@
     </div>
 
     <script id="user-profile-template" type="text/x-handlebars-template">
-      <h1>Logged in as {{display_name}}</h1>
+
+      <h1>HELLO THERE {{display_name}}</h1>
       <div class="media">
-        <div class="pull-left">
-          <img class="media-object" width="150" src="{{images.0.url}}" />
+        <div class="pull-left" id="pfpbg">
+          <img class="media-object" id="pfp" src="{{images.0.url}}" />
         </div>
+        <!--
         <div class="media-body">
           <dl class="dl-horizontal">
             <dt>Display name</dt><dd class="clearfix">{{display_name}}</dd>
@@ -48,20 +71,37 @@
             <dt>Country</dt><dd>{{country}}</dd>
           </dl>
         </div>
+      -->
       </div>
     </script>
 
     <script id="oauth-template" type="text/x-handlebars-template">
+      <!--
       <h2>oAuth info</h2>
       <dl class="dl-horizontal">
         <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
         <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}</dd>
       </dl>
+    -->
     </script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script>
+      function MakeThing(){
+
+        thing = setInterval(function(){
+          var newbr =   (
+              (((Math.floor(Math.random()*500)) + 50) + "px ") +
+              (((Math.floor(Math.random()*500)) + 50) + "px ") +
+              (((Math.floor(Math.random()*500)) + 50) + "px ") +
+              (((Math.floor(Math.random()*500)) + 50) + "px"));
+          console.log(String(newbr));
+          $("#pfp").css("border-radius", String(newbr));
+          $("#pfpbg").css("background-color",
+          "#" + Math.floor(Math.random()*16777215).toString(16));
+        }, 1000);
+      }
       (function() {
 
         /**
@@ -112,6 +152,7 @@
 
                   $('#login').hide();
                   $('#loggedin').show();
+                  MakeThing();
                 }
             });
           } else {
@@ -139,4 +180,3 @@
     </script>
   </body>
 </html>
-
