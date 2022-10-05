@@ -1,4 +1,4 @@
-# Spotify Accounts Authentication Examples
+# Playing with the Spotify API
 
 This project is built using a template that contains basic demos showing the different OAuth 2.0 flows for [authenticating against the Spotify Web API](https://developer.spotify.com/web-api/authorization-guide/).
 
