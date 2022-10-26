@@ -4,14 +4,14 @@
     <title>Example of the Authorization Code flow with Spotify</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style type="text/css">
-    .container {
-      height: 100vh;
-      width: 100vw;
-      background-color: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+      .container {
+        height: 100vh;
+        width: 100vw;
+        background-color: black;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+      }
       #login, #loggedin {
         color: red;
       }
@@ -21,7 +21,6 @@
         white-space: nowrap;
         width: 500px;
       }
-
       #pfp {
         width: 400px;
         transition: 2s;
@@ -32,6 +31,74 @@
       #obtain-new-token {
         display: none;
       }
+
+      #content {
+        display: flex;
+        flex-flow: row nowrap;
+        height: 80vh;
+        width: 80vw;
+        justify-content: space-around;
+        align-items: space-around;
+      }
+
+      #header {
+        outline: 1px solid black;
+        height: 100vh;
+      }
+
+      #interactive {
+        outline: 1px solid black;
+        height: 100vh;
+      }
+
+      #quiz {
+        display: flex;
+        flex-flow: column;
+        outline: 1px solid black;
+        align-items: center;
+        justify-content: space-around;
+
+      }
+
+      .quizrow {
+        display: flex;
+        flex-flow: row;
+      }
+
+      #quizquestion {
+        color: white;
+        font-size: 40px;
+      }
+      #quizphoto {
+        height: 300px;
+        width: 300px;
+        background-color: blue;
+        background-size: contain;
+      }
+
+      .quizoption {
+        height: 75px;
+        width: 250px;
+        margin: 15px;
+        background-color: #bbbfc7;
+        border-radius: 10px;
+        border: 5px solid gray;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: black;
+        font-size: 20px;
+      }
+
+      .quizoption:hover {
+        cursor: pointer;
+        opacity: 0.8;
+      }
+
+      .quizoption:click {
+        background-color: blue;
+      }
+
     </style>
   </head>
 
@@ -53,26 +120,53 @@
     </div>
 
     <script id="user-profile-template" type="text/x-handlebars-template">
-
-      <h1>HELLO THERE {{display_name}}</h1>
-      <div class="media">
-        <div class="pull-left" id="pfpbg">
-          <img class="media-object" id="pfp" src="{{images.0.url}}" />
+    <div id="content">
+      <div id="header">
+        <h1>HELLO THERE {{display_name}}</h1>
+        <div class="media">
+          <div class="pull-left" id="pfpbg">
+            <img class="media-object" id="pfp" src="{{images.0.url}}" />
+          </div>
+          <!--
+          <div class="media-body">
+            <dl class="dl-horizontal">
+              <dt>Display name</dt><dd class="clearfix">{{display_name}}</dd>
+              <dt>Id</dt><dd>{{id}}</dd>
+              <dt>Email</dt><dd>{{email}}</dd>
+              <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
+              <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
+              <dt>Profile Image</dt><dd class="clearfix"><a href="{{images.0.url}}">{{images.0.url}}</a></dd>
+              <dt>Country</dt><dd>{{country}}</dd>
+            </dl>
+          </div>
+        -->
         </div>
-        <!--
-        <div class="media-body">
-          <dl class="dl-horizontal">
-            <dt>Display name</dt><dd class="clearfix">{{display_name}}</dd>
-            <dt>Id</dt><dd>{{id}}</dd>
-            <dt>Email</dt><dd>{{email}}</dd>
-            <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
-            <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
-            <dt>Profile Image</dt><dd class="clearfix"><a href="{{images.0.url}}">{{images.0.url}}</a></dd>
-            <dt>Country</dt><dd>{{country}}</dd>
-          </dl>
-        </div>
-      -->
       </div>
+      <div id="interactive">
+
+
+        <div id="quiz">
+
+
+          <div id="quizquestion">What is _____'s top song?</div>
+
+          <div id="quizphoto"></div>
+
+          <div id="quizOptions">
+            <div id="qr1" class="quizrow">
+              <div id="qo1" class="quizoption">Quiz Option 1</div>
+              <div id="qo2" class="quizoption">Quiz Option 2</div>
+            </div>
+            <div id="qr2" class="quizrow">
+              <div id="qo3" class="quizoption">Quiz Option 3</div>
+              <div id="qo4" class="quizoption">Quiz Option 4</div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
     </script>
 
     <script id="oauth-template" type="text/x-handlebars-template">
@@ -88,20 +182,82 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script>
+
       function MakeThing(){
 
         thing = setInterval(function(){
           var newbr =   (
+            /* random colors within a certain bound around black */
               (((Math.floor(Math.random()*500)) + 50) + "px ") +
               (((Math.floor(Math.random()*500)) + 50) + "px ") +
               (((Math.floor(Math.random()*500)) + 50) + "px ") +
               (((Math.floor(Math.random()*500)) + 50) + "px"));
-          console.log(String(newbr));
+              /* lol jquery */
           $("#pfp").css("border-radius", String(newbr));
           $("#pfpbg").css("background-color",
           "#" + Math.floor(Math.random()*16777215).toString(16));
         }, 1000);
       }
+
+      function setUpButtons() {
+        quizButtons = document.querySelectorAll(".quizoption");
+
+        for(i = 0; i < quizButtons.length; i++) {
+          quizButtons[i].onmousedown = function(){
+            this.style.backgroundColor = "#2f3134";
+          }
+          quizButtons[i].onmouseup = function(){
+            this.style.backgroundColor = "#bbbfc7";
+          }
+        }
+
+        qq = document.getElementById("quizquestion");
+        qp = document.getElementById("quizphoto");
+        qos = document.querySelectorAll('.quizoption');
+      }
+
+      function runQuiz(topArtists, at) {
+        topArtists = topArtists['items'];
+        artistNames = [];
+        for(i = 0; i < topArtists.length; i++) {
+          artistNames.push(topArtists[i.toString()]['name']);
+        }
+        newQuestion(topArtists[Math.floor(Math.random()*19).toString()], at);
+        for(i = 0; i < qos.length; i++) {
+          qos[i].onclick = function() {
+            runQuiz(newQuestion(topArtists[Math.floor(Math.random()*19).toString()], at));
+          }
+        }
+
+      }
+
+      function newQuestion(artist, at) {
+        console.log(artist);
+        qq.innerHTML = "What is " + artist['name'] +
+        '\'s most popular song on spotify right now?';
+        if(artist['name'] == "Bruce Springsteen") {
+          qq.innerHTMl = "What is THE BOSS's most popular" +
+          "song on spotify right now?";
+        }
+        qp.style.backgroundImage = "url('" + artist['images'][0]['url'] + "')"
+        topTracksUrl = (artist['href'] + '/top-tracks');
+        console.log(topTracksUrl);
+        console.log(at)
+        $.ajax({
+            url: topTracksUrl,
+            headers: {
+              'Authorization': 'Bearer ' + at
+            },
+            success: function(response) {
+              console.log(response)
+            }
+        });
+
+
+      }
+
+
+
       (function() {
 
         /**
@@ -153,9 +309,26 @@
                   $('#login').hide();
                   $('#loggedin').show();
                   MakeThing();
+                  setUpButtons();
                 }
             });
-          } else {
+
+            $.ajax({
+              url: 'https://api.spotify.com/v1/me/top/artists',
+              headers: {
+                'Authorization': 'Bearer ' + access_token
+              },
+              success: function(response) {
+                console.log("successfully grabbed top artists");
+                runQuiz(response, access_token);
+              }
+            });
+
+
+
+
+          }
+          else {
               // render initial screen
               $('#login').show();
               $('#loggedin').hide();
